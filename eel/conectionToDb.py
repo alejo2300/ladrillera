@@ -16,8 +16,7 @@ def deleteClientById(clientId):
 def addClient(name, channel):
     #Get previous max value
     cursor.execute("SELECT MAX(id_client) FROM CLIENT")
-    mvalue = cursor.fetchone()[0]
-    cursor.execute("INSERT INTO CLIENT (NAME, CHANNEL) VALUES ( ?, ?, ?)", (mvalue, name, channel))
+    cursor.execute("INSERT INTO CLIENT (NAME, CHANNEL) VALUES ( ?, ?)", (name, channel))
     cursor.commit()
 
 def closeDB():

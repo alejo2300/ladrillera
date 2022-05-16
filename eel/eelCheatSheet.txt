@@ -1,0 +1,30 @@
+FROM PY
+@eel.expose
+def helloWrld():
+    print "Hello World!"
+
+
+
+
+
+TO JS
+function callHelloWrldPy() {
+    eel.helloWrld()
+}
+
+___________________________________________________________________________________
+
+FROM JS
+
+function addText(text) {
+    document.getElementById("text").innerHTML = text;
+}
+
+eel.expose(addText);
+
+FROM PY
+eel.addText("Hello World!")
+
+
+RETURNING VALUES
+You take (function)(return handler)
