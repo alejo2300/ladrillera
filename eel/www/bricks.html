@@ -1,52 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
-    <!-- IMPORTS -->
-    <script src="eel.js"></script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productos</title>
+  <!-- IMPORTS -->
+  <script src="eel.js"></script>
 
-    <!-- JS -->
-    <script>
-        function link(target){
-            window.location.href = target;
-        }
-    </script>
+  <!-- JS -->
+  <script>
+    //On start calls
+    readProduct();
 
-    <!-- Import bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    function link(target) {
+      window.location.href = target;
+    }
+
+    function readProduct() {
+      eel.readProduct();
+    }
+
+    function readProductResponse(productList) {
+      const tbodyElement = document.querySelector("tbody");
+      let id_product, name, inventary, precut, cut, dry, oven, cellar;
+      for (let i = 0; i < productList.length; i++) {
+        id_product = productList[i][0];
+        name = productList[i][1];
+        inventary = productList[i][2];
+        precut = productList[i][3];
+        cut = productList[i][4];
+        dry = productList[i][5];
+        oven = productList[i][6];
+        cellar = productList[i][7];
+        tbodyElement.innerHTML += `
+                    <tr>
+                        <td>${id_product}</td>
+                        <td>${name}</td>
+                        <td>${inventary}</td>
+                        <td>${precut}</td>
+                        <td>${cut}</td>
+                        <td>${dry}</td>
+                        <td>${oven}</td>
+                        <td>${cellar}</td>
+                    </tr>`;
+      }
+    } eel.expose(readProductResponse)
+
+    function deleteProductHandler() {
+      let id = document.getElementById("idDeleteProduct").value;
+      eel.deleteProduct(id);
+      location.reload();
+    }
+
+    function getProductById() {
+      let id = document.getElementById("idEdit").value;
+      eel.getProductById(id);
+    }
+
+    function getProductByIdResponse(product) {
+      const nameProductEdit = document.getElementById("productNameEdit");
+      const inventaryProductEdit = document.getElementById("productInventaryEdit");
+      const precutProductEdit = document.getElementById("productPrecutEdit");
+      const cutProductEdit = document.getElementById("productCutEdit");
+      const dryProductEdit = document.getElementById("productDryEdit");
+      const ovenProductEdit = document.getElementById("productOvenEdit");
+      const cellarProductEdit = document.getElementById("productCellarEdit");
+      if (product != null) {
+        nameProductEdit.value = product[1];
+        inventaryProductEdit.value = product[2];
+        precutProductEdit.value = product[3];
+        cutProductEdit.value = product[4];
+        dryProductEdit.value = product[5];
+        ovenProductEdit.value = product[6];
+        cellarProductEdit.value = product[7];
+      } else {
+        alert("No se encontro el producto");
+      }
+    } eel.expose(getProductByIdResponse)
+
+    function updateProduct() {
+      let id = document.getElementById("idEdit").value;
+      let name = document.getElementById("productNameEdit").value;
+      let inventary = document.getElementById("productInventaryEdit").value;
+      let precut = document.getElementById("productPrecutEdit").value;
+      let cut = document.getElementById("productCutEdit").value;
+      let dry = document.getElementById("productDryEdit").value;
+      let oven = document.getElementById("productOvenEdit").value;
+      let cellar = document.getElementById("productCellarEdit").value;
+      eel.updateProduct(id, name, inventary, precut, cut, dry, oven, cellar);
+      location.reload();
+    }
+
+    function addProduct(){
+      let name = document.getElementById("productNameAdd").value;
+      let inventary = document.getElementById("productInventaryAdd").value;
+      let precut = document.getElementById("productPrecutAdd").value;
+      let cut = document.getElementById("productCutAdd").value;
+      let dry = document.getElementById("productDryAdd").value;
+      let oven = document.getElementById("productOvenAdd").value;
+      let cellar = document.getElementById("productCellarAdd").value;
+      eel.addProduct(name, inventary, precut, cut, dry, oven, cellar);
+      location.reload();
+    }
+  </script>
+
+  <!-- Import bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Maguncia</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Maguncia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#" onclick="link('index.html')">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#" onclick="link('clients.html')">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#" onclick="link('orders.html')">Ordenes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#" onclick="link('bricks.html')">Productos</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- End NAVBAR -->
+
+  <!-- CRUD BUTTONS -->
+  <div class="d-flex justify-content-center" style="margin-top: 15px">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+      Añadir producto
+    </button>
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editProductModal">
+      Modificar producto
+    </button>
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+      Eliminar producto
+    </button>
+  </div>
+
+  <!-- ADD CLIENT MODAL -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Añadir producto</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" onclick="link('index.html')">Menu</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="#" onclick="link('clients.html')">Clientes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="#" onclick="link('orders.html')">Ordenes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="#" onclick="link('bricks.html')">Productos</a>
-              </li>
-            </ul>
-          </div>
         </div>
-      </nav>
+        <div class="modal-body">
+          <form action="">
+            <input type="text" placeholder="Nombre" id="productNameAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="number" placeholder="Inventario" id="productInventaryAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Precorte" id="productPrecutAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Corte" id="productCutAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Secado" id="productDryAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Horno" id="productOvenAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Iventariado" id="productCellarAdd" class="form-control" style="margin-bottom:5px ;">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Descartar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="addProduct()">
+            Registar producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- End NAVBAR -->
+  <!-- EDIT CLIENT MODAL -->
+  <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Editar producto</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <input type="text" placeholder="Id producto" id="idEdit" class="form-control" style="margin-bottom: 5px" />
+            <button type="button" class="btn btn-primary" onclick="getProductById()" style="margin-bottom: 5px">🔎</button>
+            <input type="text" placeholder="Nombre" id="productNameEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="number" placeholder="Inventario" id="productInventaryEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Precorte" id="productPrecutEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Corte" id="productCutEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Secado" id="productDryEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Horno" id="productOvenEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Iventariado" id="productCellarEdit" class="form-control" style="margin-bottom:5px ;">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload()">
+            Descartar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="updateProduct()">
+            Guardar cambios producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- DELETE CLIENT MODAL -->
+  <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Eliminar producto
+          </h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <input type="number" placeholder="Id producto" id="idDeleteProduct" class="form-control" />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Descartar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="deleteProductHandler()">
+            Eliminar producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Inventario</th>
+        <th scope="col">T. Precorte</th>
+        <th scope="col">T. Corte</th>
+        <th scope="col">T. Secado</th>
+        <th scope="col">T. Horno</th>
+        <th scope="col">T. Iventariado</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </body>
+
 </html>

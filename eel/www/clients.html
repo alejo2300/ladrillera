@@ -41,6 +41,44 @@
       }
       eel.expose(readClientResponse);
 
+      function deleteClientHandler(){
+        let id = document.getElementById("idDelete").value;
+        eel.deleteClient(id);
+        location.reload();
+      }
+
+      function getClientById(){
+        let id = document.getElementById("idEdit").value;
+        eel.getClientById(id);
+      }
+
+      function getClientByIdResponse(client){
+        const nameClientEdit = document.getElementById("clientNameEdit");
+        const chanelClientEdit = document.getElementById("clientChanelEdit");
+        if(client != null){
+          nameClientEdit.value = client[1];
+          chanelClientEdit.value = client[2];
+        }else{
+          alert("El cliente no existe");
+        }
+      }eel.expose(getClientByIdResponse);
+
+      function updateClientChanges(){
+        let id = document.getElementById("idEdit").value;
+        let name = document.getElementById("clientNameEdit").value;
+        let chanel = document.getElementById("clientChanelEdit").value;
+        eel.updateClientChanges(id, name, chanel);
+        location.reload();
+      }
+
+      function addClient(){
+        let name = document.getElementById("clientNameAdd").value;
+        let chanel = document.getElementById("clientChanelAdd").value;
+        eel.addClient(name, chanel);
+        location.reload();
+      }
+      
+
       $('#myModal').show();
 
     </script>
@@ -110,19 +148,19 @@
 
     <!-- CRUD BUTTONS -->
     <div class="d-flex justify-content-center" style="margin-top: 15px ;">
-      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#myModal">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addClientModal">
         Añadir cliente
       </button>
-      <button type="button" class="btn btn-outline-secondary">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editClientModal">
         Modificar cliente
       </button>
-      <button type="button" class="btn btn-outline-secondary">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteClientModal">
         Eliminar cliente
       </button>
     </div>
 
     <!-- ADD CLIENT MODAL -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -133,13 +171,62 @@
           </div>
           <div class="modal-body">
             <form action="">
-              <input type="text" placeholder="Nombre" id="nameAdd" class="form-control" style="margin-bottom:5px ;">
-              <input type="number" placeholder="Canal" id="chanelAdd" class="form-control">
+              <input type="text" placeholder="Nombre" id="clientNameAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="number" placeholder="Canal" id="clientChanelAdd" class="form-control">
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Descartar</button>
-            <button type="button" class="btn btn-primary">Registar cliente</button>
+            <button type="button" class="btn btn-primary" onclick="addClient()">Registar cliente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT CLIENT MODAL -->
+    <div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar cliente</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <input type="text" placeholder="Id cliente" id="idEdit" class="form-control" style="margin-bottom:5px ;">
+              <button type="button" class="btn btn-primary" onclick="getClientById()" style="margin-bottom:5px ;">🔎</button>
+              <input type="text" placeholder="Nombre cliente" id="clientNameEdit" class="form-control">
+              <input type="text" placeholder="Canal cliente" id="clientChanelEdit" class="form-control">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload()">Descartar</button>
+            <button type="button" class="btn btn-primary" onclick="updateClientChanges()">Guardar cambios cliente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE CLIENT MODAL -->
+    <div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Eliminar cliente</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <input type="number" placeholder="Id Cliente" id="idDelete" class="form-control">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Descartar</button>
+            <button type="button" class="btn btn-primary" onclick="deleteClientHandler()">Eliminar cliente</button>
           </div>
         </div>
       </div>
