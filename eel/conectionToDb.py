@@ -51,6 +51,30 @@ def updateProduct(productid, productName, productInventary, productPrecut, produ
     cursor.execute("UPDATE PRODUCT SET NAME = ?, INVENTARY = ?, PRECUT = ?, CUT = ?, DRY = ?, OVEN = ?, CELLAR = ? WHERE ID_PRODUCT = ?", (productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar, productid))
     sqlite3.Connection.commit(connection)
     
+#ORDER CRUD OPERATIONS
+def getOrders():
+    cursor.execute("SELECT * FROM ORDERS")
+    orders = cursor.fetchall()
+    return orders
+
+def deleteOrderById(orderId):
+    cursor.execute("DELETE FROM ORDERS WHERE ID_ORDER = ?", (orderId,))
+    sqlite3.Connection.commit(connection)
+    
+def addOrder(clientId, productId, quantity, date, status, deliveryTime):
+    cursor.execute("INSERT INTO ORDERS (ID_CLIENT, ID_PRODUCT, MOUNT, DATE, STATUS, DELIVERY_TIME) VALUES ( ?, ?, ?, ?, ?, ?)", (clientId, productId, quantity, date, status, deliveryTime))
+    sqlite3.Connection.commit(connection)
+
+def getOrderById(orderId):
+    cursor.execute("SELECT * FROM ORDERS WHERE ID_ORDER = ?", (orderId,))
+    sorder = cursor.fetchone()
+    return sorder
+
+def updateOrder(orderid, clientId, productId, quantity, date, status, deliveryTime):
+    cursor.execute("UPDATE ORDERS SET ID_CLIENT = ?, ID_PRODUCT = ?, MOUNT = ?, DATE = ?, STATUS = ?, DELIVERY_TIME = ? WHERE ID_ORDER = ?", (clientId, productId, quantity, date, status, deliveryTime, orderid))
+    sqlite3.Connection.commit(connection)
+
+    
 # CLOSE DATABASE
 
 def closeDB():

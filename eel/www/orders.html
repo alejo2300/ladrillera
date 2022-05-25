@@ -10,8 +10,93 @@
 
     <!-- JS -->
     <script>
+      //On start calls
+        readOrder()
+
         function link(target){
             window.location.href = target;
+        }
+
+        function readOrder(){
+          eel.readOrder();
+        }
+
+        function readOrderResponse(orderList){
+          const tbodyElement = document.querySelector("tbody");
+          let id_client, id_product, id_order, mount, date, status, deliveryTime;
+          for(let i=0; i<orderList.length ; i++){
+            id_client = orderList[i][0];
+            id_product = orderList[i][1];
+            id_order = orderList[i][2];
+            mount = orderList[i][3];
+            date = orderList[i][4];
+            status = orderList[i][5];
+            deliveryTime = orderList[i][6];
+            tbodyElement.innerHTML += `
+            <tr>
+              <td>${id_order}</td>
+              <td>${id_client}</td>
+              <td>${id_product}</td>
+              <td>${mount}</td>
+              <td>${date}</td>
+              <td>${status}</td>
+              <td>${deliveryTime}</td>
+              `
+          }
+        }eel.expose(readOrderResponse)
+
+        function deleteOrderHandler(){
+          let id = document.getElementById("idOrderDelete").value;
+          eel.deleteOrder(id);
+          location.reload();
+        }
+
+        function getOrderById(){
+          let id = document.getElementById("idOrderEdit").value;
+          eel.getOrderById(id);
+        }
+
+        function getOrderByIdResponse(order){
+          const idProduct = document.getElementById("idProductEdit");
+          const idClient = document.getElementById("idClientEdit");
+          const mount = document.getElementById("mountEdit");
+          const date = document.getElementById("dateEdit");
+          const status = document.getElementById("statusEdit");
+          const deliveryTime = document.getElementById("deliveryEdit");
+          if(order != null){
+            idProduct.value = order[1];
+            idClient.value = order[0];
+            mount.value = order[3];
+            date.value = order[4];
+            status.value = order[5];
+            deliveryTime.value = order[6];
+          }else{
+            alert("No se encontro el pedido");
+          }
+        }eel.expose(getOrderByIdResponse)
+
+        function updateOrder(){
+          let id = document.getElementById("idOrderEdit").value;
+          let idProduct = document.getElementById("idProductEdit").value;
+          let idClient = document.getElementById("idClientEdit").value;
+          let mount = document.getElementById("mountEdit").value;
+          let date = document.getElementById("dateEdit").value;
+          let status = document.getElementById("statusEdit").value;
+          let deliveryTime = document.getElementById("deliveryEdit").value;
+          eel.updateOrder(id, idProduct, idClient, mount, date, status, deliveryTime);
+          location.reload();
+        }
+
+        function addOrderBTN(){
+          let idProduct = document.getElementById("idProductAdd").value;
+          let idClient = document.getElementById("idClientAdd").value;
+          let mount = document.getElementById("mountAdd").value;
+          let date = document.getElementById("dateAdd").value;
+          let status = document.getElementById("statusAdd").value;
+          let deliveryTime = document.getElementById("deliveryAdd").value;
+          console.log(idProduct, idClient, mount, date, status, deliveryTime);
+          eel.addOrder(idProduct, idClient, mount, date, status, deliveryTime);
+          location.reload();
         }
     </script>
 
@@ -47,5 +132,139 @@
       </nav>
 
     <!-- End NAVBAR -->
+
+    <!-- CRUD BUTTONS -->
+  <div class="d-flex justify-content-center" style="margin-top: 15px">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+      Añadir orden
+    </button>
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editProductModal">
+      Modificar orden
+    </button>
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+      Eliminar orden
+    </button>
+  </div>
+
+  <!-- ADD ORDER MODAL -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Añadir orden</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <input type="number" placeholder="Id Cliente" id="idClientAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="number" placeholder="Id Producto" id="idProductAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="number" placeholder="Unidades a producir" id="mountAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="date" placeholder="Fecha de orden" id="dateAdd" class="form-control" style="margin-bottom:5px ;">
+              <select name="estado" id="statusAdd" style="margin-bottom:5px ;">
+                <option value="Activa">Activa</option>
+                <option value="Entregada">Entregada</option>
+              </select>
+              <input type="number" placeholder="Tiempo de entrega" id="deliveryAdd" class="form-control" style="margin-bottom:5px ;">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Descartar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="addOrderBTN()">
+            Registar orden
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT CLIENT MODAL -->
+  <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Editar orden</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <input type="number" placeholder="Id Order" id="idOrderEdit" class="form-control" style="margin-bottom:5px ;">
+            <button type="button" class="btn btn-primary" onclick="getOrderById()" style="margin-bottom: 5px">🔎</button>
+            <input type="number" placeholder="Id Producto" id="idProductEdit" class="form-control" style="margin-bottom:5px ;">
+            <input type="number" placeholder="Id Cliente" id="idClientEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="number" placeholder="Unidades a producir" id="mountEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="date" placeholder="Fecha de orden" id="dateEdit" class="form-control" style="margin-bottom:5px ;">
+              <select name="estado" id="statusEdit" style="margin-bottom:5px ;">
+                <option value="Activa">Activa</option>
+                <option value="Entregada">Entregada</option>
+              </select>
+              <input type="number" placeholder="Tiempo de entrega" id="deliveryEdit" class="form-control" style="margin-bottom:5px ;">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload()">
+            Descartar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="updateOrder()">
+            Guardar cambios orden
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CLIENT MODAL -->
+  <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Eliminar orden
+          </h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <input type="number" placeholder="Id orden" id="idOrderDelete" class="form-control" />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Descartar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="deleteOrderHandler()">
+            Eliminar orden
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Id. Cliente</th>
+        <th scope="col">Id. Producto</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Fecha de orden</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Tiempo de entrega</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
 </body>
 </html>

@@ -92,5 +92,49 @@ def addProduct(name, inventary, precut, cut, dry, oven, cellar):
     productCellar = float(cellar)
     db.addProduct(productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar)
   
+#ORDER
+#Crud operations for order
+#get order
+@eel.expose
+def readOrder():
+    orderList =  db.getOrders()
+    eel.readOrderResponse(orderList)
+ 
+#delete order
+@eel.expose
+def deleteOrder(orderId):
+    orderIdDelete = int(orderId)
+    db.deleteOrderById(orderIdDelete)
+    
+#get order by id
+@eel.expose
+def getOrderById(orderId):
+    orderId = int(orderId)
+    order = db.getOrderById(orderId)
+    eel.getOrderByIdResponse(order)
+
+#update order
+@eel.expose
+def updateOrder(orderId, orderProductId, orderClientId, orderQuantity, orderDate, orderStatus, orderDeliveryTime):
+    orderId = int(orderId)
+    orderClientId = int(orderClientId)
+    orderProductId = int(orderProductId)
+    orderQuantity = int(orderQuantity)
+    orderDate = str(orderDate)
+    orderStatus = str(orderStatus)
+    orderDeliveryTime = str(orderDeliveryTime)
+    db.updateOrder(orderId, orderClientId, orderProductId, orderQuantity, orderDate, orderStatus, orderDeliveryTime)
+    
+#add order
+@eel.expose
+def addOrder(productId, clientId, quantity, date, status, deliveryTime):
+    print(productId + clientId + quantity + date + status + deliveryTime)
+    clientId = int(clientId)
+    productId = int(productId)
+    quantity = int(quantity)
+    date = str(date)
+    status = str(status)
+    deliveryTime = int(deliveryTime)
+    db.addOrder(clientId, productId, quantity, date, status, deliveryTime)
 #This line come after all expose functions  
 eel.start("index.html")
