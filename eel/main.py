@@ -1,5 +1,5 @@
 from http import client
-from itertools import product
+from itertools import permutations, product
 import eel
 import conectionToDb as db
 
@@ -136,5 +136,26 @@ def addOrder(productId, clientId, quantity, date, status, deliveryTime):
     status = str(status)
     deliveryTime = int(deliveryTime)
     db.addOrder(clientId, productId, quantity, date, status, deliveryTime)
-#This line come after all expose functions  
+#This line come after all expose functions
+
+
+#Programation querys
+#get programation by priority
+@eel.expose
+def getProgramationByPriority():
+    programationList = db.getProgramationByPriority()
+    getProgramationDuration(programationList)
+    eel.getProgramationResponse(programationList)
+  
+@eel.expose
+def getProgramationByMount():
+    programationList = db.getProgramationByMount()
+    eel.getProgramationResponse(programationList)
+    
+@eel.expose
+def getProgramationByPriorityMMount():
+    programationList = db.getProgramationByPriorityMMount()
+    eel.getProgramationResponse(programationList)
+    
+    
 eel.start("index.html")

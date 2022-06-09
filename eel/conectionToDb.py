@@ -1,3 +1,4 @@
+from os import stat
 import sqlite3
 
 connection =  sqlite3.connect('maguncia.db')
@@ -50,6 +51,11 @@ def getProductById(productId):
 def updateProduct(productid, productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar):
     cursor.execute("UPDATE PRODUCT SET NAME = ?, INVENTARY = ?, PRECUT = ?, CUT = ?, DRY = ?, OVEN = ?, CELLAR = ? WHERE ID_PRODUCT = ?", (productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar, productid))
     sqlite3.Connection.commit(connection)
+
+def getProductByName(name):
+    cursor.execute("SELECT * FROM PRODUCT WHERE NAME = ?", (name,))
+    selectedProduct = cursor.fetchone()
+    return selectedProduct
     
 #ORDER CRUD OPERATIONS
 def getOrders():
@@ -73,7 +79,26 @@ def getOrderById(orderId):
 def updateOrder(orderid, clientId, productId, quantity, date, status, deliveryTime):
     cursor.execute("UPDATE ORDERS SET ID_CLIENT = ?, ID_PRODUCT = ?, MOUNT = ?, DATE = ?, STATUS = ?, DELIVERY_TIME = ? WHERE ID_ORDER = ?", (clientId, productId, quantity, date, status, deliveryTime, orderid))
     sqlite3.Connection.commit(connection)
+    
+    
+#PROGRAMATION QUERIES
+def getProgramationByPriority():
+    status = "Activa"
+    cursor.execute("SELECT c.name as cliente, c.chanel as prioridad, o.mount as cantidad, p.name as producto, o.delivery_time from ORDERS as o, CLIENT as c, PRODUCT as p where o.id_client=c.id_client AND p.id_product=o.id_product  and status=? ORDER by c.chanel DESC",(status,))
+    programation = cursor.fetchall()
+    return programation
 
+def getProgramationByMount():
+    status = "Activa"
+    cursor.execute("SELECT c.name as cliente, c.chanel as prioridad, o.mount as cantidad, p.name as producto, o.delivery_time from ORDERS as o, CLIENT as c, PRODUCT as p where o.id_client=c.id_client AND p.id_product=o.id_product  and status=? ORDER by o.mount DESC",(status,))
+    programation = cursor.fetchall()
+    return programation
+
+def getProgramationByPriorityMMount():
+    status = "Activa"
+    cursor.execute("SELECT c.name as cliente, c.chanel as prioridad, o.mount as cantidad, p.name as producto, o.delivery_time from ORDERS as o, CLIENT as c, PRODUCT as p where o.id_client=c.id_client AND p.id_product=o.id_product  and status=? ORDER by o.mount*c.chanel DESC",(status,))
+    programation = cursor.fetchall()
+    return programation
     
 # CLOSE DATABASE
 
