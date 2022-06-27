@@ -29,22 +29,22 @@
         id_product = productList[i][0];
         name = productList[i][1];
         inventary = productList[i][2];
-        precut = productList[i][3];
-        cut = productList[i][4];
-        dry = productList[i][5];
-        oven = productList[i][6];
-        cellar = productList[i][7];
+        cut = productList[i][3];
+        oven = productList[i][4];
+        cellar = productList[i][5];
+        dryArt = productList[i][6];
+        dryNat = productList[i][7]
         tbodyElement.innerHTML += `
                     <tr>
                         <td>${id_product}</td>
                         <td>${name}</td>
                         <td>${inventary}</td>
-                        <td>${precut}</td>
                         <td>${cut}</td>
-                        <td>${dry}</td>
                         <td>${oven}</td>
                         <td>${cellar}</td>
-                    </tr>`;
+                        <td>${dryArt}</td>
+                        <td>${dryNat}</td>
+                      </tr>`;
       }
     } eel.expose(readProductResponse)
 
@@ -62,19 +62,19 @@
     function getProductByIdResponse(product) {
       const nameProductEdit = document.getElementById("productNameEdit");
       const inventaryProductEdit = document.getElementById("productInventaryEdit");
-      const precutProductEdit = document.getElementById("productPrecutEdit");
       const cutProductEdit = document.getElementById("productCutEdit");
-      const dryProductEdit = document.getElementById("productDryEdit");
+      const dryNaturalProductEdit = document.getElementById("productDryNatEdit");
+      const dryArtificialProductEdit = document.getElementById("productDryArtEdit");
       const ovenProductEdit = document.getElementById("productOvenEdit");
       const cellarProductEdit = document.getElementById("productCellarEdit");
       if (product != null) {
         nameProductEdit.value = product[1];
         inventaryProductEdit.value = product[2];
-        precutProductEdit.value = product[3];
-        cutProductEdit.value = product[4];
-        dryProductEdit.value = product[5];
-        ovenProductEdit.value = product[6];
-        cellarProductEdit.value = product[7];
+        cutProductEdit.value = product[3];
+        ovenProductEdit.value = product[4];
+        cellarProductEdit.value = product[5];
+        dryNaturalProductEdit.value = product[6];
+        dryArtificialProductEdit.value = product[7];
       } else {
         alert("No se encontro el producto");
       }
@@ -84,24 +84,24 @@
       let id = document.getElementById("idEdit").value;
       let name = document.getElementById("productNameEdit").value;
       let inventary = document.getElementById("productInventaryEdit").value;
-      let precut = document.getElementById("productPrecutEdit").value;
       let cut = document.getElementById("productCutEdit").value;
-      let dry = document.getElementById("productDryEdit").value;
+      let dryNat = document.getElementById("productDryNatEdit").value;
+      let dryArt = document.getElementById("productDryArtEdit").value;
       let oven = document.getElementById("productOvenEdit").value;
       let cellar = document.getElementById("productCellarEdit").value;
-      eel.updateProduct(id, name, inventary, precut, cut, dry, oven, cellar);
+      eel.updateProduct(id, name, inventary, cut, dryNat, dryArt, oven, cellar);
       location.reload();
     }
 
     function addProduct(){
       let name = document.getElementById("productNameAdd").value;
       let inventary = document.getElementById("productInventaryAdd").value;
-      let precut = document.getElementById("productPrecutAdd").value;
       let cut = document.getElementById("productCutAdd").value;
-      let dry = document.getElementById("productDryAdd").value;
       let oven = document.getElementById("productOvenAdd").value;
       let cellar = document.getElementById("productCellarAdd").value;
-      eel.addProduct(name, inventary, precut, cut, dry, oven, cellar);
+      let dryArt = document.getElementById("productDryArtAdd").value;
+      let dryNat = document.getElementById("productDryNatAdd").value;
+      eel.addProduct(name, inventary, cut, dryArt,dryNat, oven, cellar);
       location.reload();
     }
   </script>
@@ -172,11 +172,12 @@
           <form action="">
             <input type="text" placeholder="Nombre" id="productNameAdd" class="form-control" style="margin-bottom:5px ;">
               <input type="number" placeholder="Inventario" id="productInventaryAdd" class="form-control" style="margin-bottom:5px ;">
-              <input type="text" placeholder="T. Precorte" id="productPrecutAdd" class="form-control" style="margin-bottom:5px ;">
               <input type="text" placeholder="T. Corte" id="productCutAdd" class="form-control" style="margin-bottom:5px ;">
-              <input type="text" placeholder="T. Secado" id="productDryAdd" class="form-control" style="margin-bottom:5px ;">
               <input type="text" placeholder="T. Horno" id="productOvenAdd" class="form-control" style="margin-bottom:5px ;">
               <input type="text" placeholder="T. Iventariado" id="productCellarAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Secado Natural" id="productDryNatAdd" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Secado Artificial" id="productDryArtAdd" class="form-control" style="margin-bottom:5px ;">
+
           </form>
         </div>
         <div class="modal-footer">
@@ -208,9 +209,9 @@
             <button type="button" class="btn btn-primary" onclick="getProductById()" style="margin-bottom: 5px">🔎</button>
             <input type="text" placeholder="Nombre" id="productNameEdit" class="form-control" style="margin-bottom:5px ;">
               <input type="number" placeholder="Inventario" id="productInventaryEdit" class="form-control" style="margin-bottom:5px ;">
-              <input type="text" placeholder="T. Precorte" id="productPrecutEdit" class="form-control" style="margin-bottom:5px ;">
               <input type="text" placeholder="T. Corte" id="productCutEdit" class="form-control" style="margin-bottom:5px ;">
-              <input type="text" placeholder="T. Secado" id="productDryEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Secado Natural" id="productDryNatEdit" class="form-control" style="margin-bottom:5px ;">
+              <input type="text" placeholder="T. Secado Artificial" id="productDryArtEdit" class="form-control" style="margin-bottom:5px ;">
               <input type="text" placeholder="T. Horno" id="productOvenEdit" class="form-control" style="margin-bottom:5px ;">
               <input type="text" placeholder="T. Iventariado" id="productCellarEdit" class="form-control" style="margin-bottom:5px ;">
           </form>
@@ -264,11 +265,11 @@
         <th scope="col">#</th>
         <th scope="col">Nombre</th>
         <th scope="col">Inventario</th>
-        <th scope="col">T. Precorte</th>
         <th scope="col">T. Corte</th>
-        <th scope="col">T. Secado</th>
         <th scope="col">T. Horno</th>
         <th scope="col">T. Iventariado</th>
+        <th scope="col">T. Secado Natural</th>
+        <th scope="col">T. Secado Artificial</th>
       </tr>
     </thead>
     <tbody></tbody>

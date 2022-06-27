@@ -39,8 +39,8 @@ def deleteProductById(productId):
     cursor.execute("DELETE FROM PRODUCT WHERE ID_PRODUCT = ?", (productId,))
     sqlite3.Connection.commit(connection)
 
-def addProduct(name,inventary,precut,cut,dry,oven,cellar):
-    cursor.execute("INSERT INTO PRODUCT (NAME, INVENTARY, PRECUT, CUT, DRY, OVEN, CELLAR) VALUES ( ?, ?, ?, ?, ?, ?, ?)", (name, inventary, precut, cut, dry, oven, cellar))
+def addProduct(name,inventary,cut,natDry,artDry,oven,cellar):
+    cursor.execute("INSERT INTO PRODUCT (NAME, INVENTARY, CUT, NATURAL_DRY, ARTIFICIAL_DRY, OVEN, CELLAR) VALUES ( ?, ?, ?, ?, ?, ?, ?)", (name, inventary, cut, natDry,artDry, oven, cellar))
     sqlite3.Connection.commit(connection)
 
 def getProductById(productId):
@@ -48,8 +48,8 @@ def getProductById(productId):
     sproduct = cursor.fetchone()
     return sproduct
 
-def updateProduct(productid, productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar):
-    cursor.execute("UPDATE PRODUCT SET NAME = ?, INVENTARY = ?, PRECUT = ?, CUT = ?, DRY = ?, OVEN = ?, CELLAR = ? WHERE ID_PRODUCT = ?", (productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar, productid))
+def updateProduct(productid, productName, productInventary, productCut, productDryNat, productDryArt, productOven, productCellar):
+    cursor.execute("UPDATE PRODUCT SET NAME = ?, INVENTARY = ?, CUT = ?, NATURAL_DRY = ?, ARTIFICIAL_DRY = ? , OVEN = ?, CELLAR = ? WHERE ID_PRODUCT = ?", (productName, productInventary, productCut, productDryNat,productDryArt, productOven, productCellar, productid))
     sqlite3.Connection.commit(connection)
 
 def getProductByName(name):

@@ -1,5 +1,6 @@
 from http import client
 from itertools import permutations, product
+import math
 import eel
 import conectionToDb as db
 
@@ -69,16 +70,16 @@ def getProductById(productId):
 
 #update product
 @eel.expose
-def updateProduct(productId, productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar):
+def updateProduct(productId, productName, productInventary, productCut, productDryNat, productDryArt, productOven, productCellar):
     productid = float(productId)
     productName = str(productName)
     productInventary = float(productInventary)
-    productPrecut = float(productPrecut)
     productCut = float(productCut)
-    productDry = float(productDry)
+    productDryNat = float(productDryNat)
+    productDryArt = float(productDryArt)
     productOven = float(productOven)
     productCellar = float(productCellar)
-    db.updateProduct(productid, productName, productInventary, productPrecut, productCut, productDry, productOven, productCellar)
+    db.updateProduct(productid, productName, productInventary, productCut, productDryNat, productDryArt, productOven, productCellar)
     
 #add product
 @eel.expose
@@ -144,18 +145,93 @@ def addOrder(productId, clientId, quantity, date, status, deliveryTime):
 @eel.expose
 def getProgramationByPriority():
     programationList = db.getProgramationByPriority()
-    getProgramationDuration(programationList)
+    getProgramationduration(programationList)
     eel.getProgramationResponse(programationList)
   
 @eel.expose
 def getProgramationByMount():
     programationList = db.getProgramationByMount()
+    getProgramationduration(programationList)
     eel.getProgramationResponse(programationList)
     
 @eel.expose
 def getProgramationByPriorityMMount():
     programationList = db.getProgramationByPriorityMMount()
+    getProgramationduration(programationList)
     eel.getProgramationResponse(programationList)
+
+@eel.expose    
+def getProgramationduration(programationList):
+    programationAndWaiting = []
+    processWaitingTimes = [0,0,0]
+    for order in programationList:
+        orderWithWaits = []
+        #Saving client name
+        orderWithWaits.append(order[0])
+        #Saving client chanel
+        orderWithWaits.append(order[1])
+        #Saving order Mount
+        orderWithWaits.append(order[2])
+        #Saving order product name
+        orderWithWaits.append(order[3])
+        #Get times by products
+        product = db.getProductByName(order[3])
+       
+        totalSingleProcessDuration = 0
+        #Estimate each time process in hr
+        cutCost = math.ceil((order[2]/product[3])/60)
+        dryNCost = math.ceil((product[6]))
+        dryACost = math.ceil((product[7]))   
+        ovenCost = math.ceil((product[4]))
+        #Calculate waiting time
+        cutWait = 0
+        ovenWait = 0
+        #Exexute individual process
+        
+        #Cut
+        cutWait = processWaitingTimes[0]
+        processWaitingTimes[0] += cutCost
+        totalSingleProcessDuration += cutWait + cutCost
+        #Saving on list
+        orderWithWaits.append(cutWait)
+        orderWithWaits.append(cutCost)
+        
+        #Dry
+        #If artificial doesnt have wait time uses that
+        drySelectedType = ""
+        if(totalSingleProcessDuration >= processWaitingTimes[1]):
+            drySelectedType = "Artificial"
+            totalSingleProcessDuration += dryACost
+            processWaitingTimes[1] += dryACost
+            #Saving on list
+            orderWithWaits.append(drySelectedType)
+            orderWithWaits.append(dryACost)
+        else:
+            drySelectedType = "Natural"
+            totalSingleProcessDuration += dryNCost
+            #Saving on list
+            orderWithWaits.append(drySelectedType)
+            orderWithWaits.append(dryNCost)
+            
+        #Oven
+        ovenWait = processWaitingTimes[2]
+        processWaitingTimes[2] += ovenCost
+        totalSingleProcessDuration += ovenWait + ovenCost
+        #Save oven data on list
+        orderWithWaits.append(ovenWait)
+        orderWithWaits.append(ovenCost)
+        
+        #Save all cost on list
+        orderWithWaits.append(totalSingleProcessDuration)
+        
+        #Save list into general list
+        programationAndWaiting.append(orderWithWaits)
+    
+    eel.productionSolve(programationAndWaiting)
+    
+    
+
+        
     
     
 eel.start("index.html")
