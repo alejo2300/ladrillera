@@ -164,6 +164,7 @@ def getProgramationByPriorityMMount():
 def getProgramationduration(programationList):
     programationAndWaiting = []
     processWaitingTimes = [0,0,0]
+    forindex = 0
     for order in programationList:
         orderWithWaits = []
         #Saving client name
@@ -214,8 +215,15 @@ def getProgramationduration(programationList):
             orderWithWaits.append(dryNCost)
             
         #Oven
-        ovenWait = processWaitingTimes[2]
-        processWaitingTimes[2] += ovenCost
+        ovenWait = 0
+        if(forindex != 0):
+            endTime = programationAndWaiting[forindex-1][10]
+            if(totalSingleProcessDuration >= endTime):
+                processWaitingTimes[2] = 0
+            else:
+                ovenWait = endTime - totalSingleProcessDuration
+                processWaitingTimes[2] = ovenWait
+            
         totalSingleProcessDuration += ovenWait + ovenCost
         #Save oven data on list
         orderWithWaits.append(ovenWait)
@@ -226,6 +234,7 @@ def getProgramationduration(programationList):
         
         #Save list into general list
         programationAndWaiting.append(orderWithWaits)
+        forindex += 1
     
     eel.productionSolve(programationAndWaiting)
     
