@@ -46,6 +46,11 @@
           getProgramationByMountDesc();
           break;
 
+        case "5":
+          cleanTable();
+          getProgramationByPriorityDMount();
+          break;
+
         default:
           alert("No se ha selecionado ningun reporte");
       }
@@ -70,6 +75,10 @@
 
     function getProgramationByMountDesc(){
       eel.getProgramationByMountDesc();
+    }
+
+    function getProgramationByPriorityDMount(){
+      eel.getProgramationByPriorityDMount();
     }
 
     function getProgramationResponse(programationList) {
@@ -238,6 +247,7 @@
         <option value="2">Por monto</option>
         <option value="3">Por prioridad*monto</option>
         <option value="4">Por monto descendente</option>
+        <option value="4">Por prioridad/monto</option>
       </select>
     </p>
     <div class="dateIni" style="text-align: center;">
