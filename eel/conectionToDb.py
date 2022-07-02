@@ -99,6 +99,12 @@ def getProgramationByPriorityMMount():
     cursor.execute("SELECT c.name as cliente, c.chanel as prioridad, o.mount as cantidad, p.name as producto, o.delivery_time from ORDERS as o, CLIENT as c, PRODUCT as p where o.id_client=c.id_client AND p.id_product=o.id_product  and status=? ORDER by o.mount*c.chanel DESC",(status,))
     programation = cursor.fetchall()
     return programation
+
+def getProgramationByMountDesc():
+    status = "Activa"
+    cursor.execute("SELECT c.name as cliente, c.chanel as prioridad, o.mount as cantidad, p.name as producto, o.delivery_time from ORDERS as o, CLIENT as c, PRODUCT as p where o.id_client=c.id_client AND p.id_product=o.id_product  and status=? ORDER by o.mount ASC",(status,))
+    programation = cursor.fetchall()
+    return programation
     
 # CLOSE DATABASE
 

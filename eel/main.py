@@ -159,6 +159,12 @@ def getProgramationByPriorityMMount():
     programationList = db.getProgramationByPriorityMMount()
     getProgramationduration(programationList)
     eel.getProgramationResponse(programationList)
+    
+@eel.expose
+def getProgramationByMountDesc():
+    programationList = db.getProgramationByMountDesc()
+    getProgramationduration(programationList)
+    eel.getProgramationResponse(programationList)
 
 @eel.expose    
 def getProgramationduration(programationList):
